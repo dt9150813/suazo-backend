@@ -1,0 +1,23 @@
+{
+  "name": "suazo-backend",
+  "version": "1.0.0",
+  "description": "Suazo's backend node api server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/dt9150813/suazo-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/dt9150813/suazo-backend/issues"
+  },
+  "homepage": "https://gitlab.com/dt9150813/suazo-backend#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "open": "^7.4.2"
+  }
+}

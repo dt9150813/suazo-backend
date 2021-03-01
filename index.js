@@ -1,6 +1,5 @@
 const firebase = require('firebase');
 const {spawn} = require('child_process');
-
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
   authDomain: "suazoapp.firebaseapp.com",
@@ -25,3 +24,19 @@ async function getUserData(){
     const python = spawn('python', ['script1.py',doc.get('name'),doc.get('Adress'),doc.get('city'),doc.get('State'),doc.get('Zip')]);
 }
 getUserData();
+var express = require('express'),
+        fs = require('fs'),
+        app = express();
+app.get('/', function (req, res) {
+    var filePath = "/destination.pdf";
+    fs.readFile(__dirname + filePath , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+    });
+});
+app.listen(3000, function(){
+    console.log('Listening on 3000');
+});
+const open = require('open');
+//opens the url in the default browser 
+// open('http://localhost:3000');

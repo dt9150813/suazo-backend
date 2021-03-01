@@ -1,11 +1,8 @@
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
 import sys
-import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-import webbrowser
-import time
 
 packet = io.BytesIO()
 # create a new PDF with Reportlab
@@ -13,9 +10,9 @@ can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
 can.drawString(195, 630, sys.argv[1]) #Company name as sys.argv[1]
 can.drawString(195, 600, sys.argv[2]) #Write address
-can.drawString(381, 600, "Bryce Canyon City") #Write city
-can.drawString(500, 600, "UT") #Write state
-can.drawString(537, 600, "84120") #Write zipcode
+can.drawString(381, 600, sys.argv[3]) #Write city
+can.drawString(500, 600, sys.argv[4]) #Write state
+can.drawString(537, 600, sys.argv[5]) #Write zipcode
 can.drawString(60, 563, "Registered Agent name")
 can.drawString(140, 534, "Address of the agent")
 can.drawString(45, 508, "Agent city")
@@ -65,12 +62,7 @@ output = PdfFileWriter()
 page = existing_pdf.getPage(0)
 page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
-
 # finally, write "output" to a real file
 outputStream = open("destination.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
-print('file saved')
-webbrowser.open_new('.\destination.pdf')
-time.sleep(5)
-os.remove('.\destination.pdf')
