@@ -24,9 +24,9 @@ async function getUserData(){
     const python = spawn('python', ['script1.py',doc.get('name'),doc.get('Adress'),doc.get('city'),doc.get('State'),doc.get('Zip')]);
 }
 getUserData();
-var express = require('express'),
+const app = require('express')(),
         fs = require('fs'),
-        app = express();
+        port = process.env.PORT || 3000
 app.get('/', function (req, res) {
     var filePath = "/destination.pdf";
     fs.readFile(__dirname + filePath , function (err,data){
@@ -34,8 +34,8 @@ app.get('/', function (req, res) {
         res.send(data);
     });
 });
-app.listen(3000, function(){
-    console.log('Listening on 3000');
+app.listen(port, function(){
+    console.log(`Listening on port ${port}`);
 });
 const open = require('open');
 //opens the url in the default browser 
