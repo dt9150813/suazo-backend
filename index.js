@@ -20,7 +20,6 @@ async function getUserData(){
     } else {
       console.log('Document data:', doc.data());
     }
-    console.log(doc.get('Adress'));
     const python = spawn('python', ['script1.py',doc.get('name'),doc.get('Adress'),doc.get('city'),doc.get('State'),doc.get('Zip')]);
 }
 getUserData();
