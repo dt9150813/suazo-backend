@@ -11,8 +11,8 @@ packet = io.BytesIO()
 # create a new PDF with Reportlab
 can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
-can.drawString(195, 630, sys.argv[1]) #Company name as sys.argv[1]
-can.drawString(195, 600, sys.argv[2]) #Write address
+can.drawString(195, 630, sys.argv[2]) #Owner name as sys.argv[1]
+can.drawString(195, 600, sys.argv[3]) #Write address
 can.drawString(381, 600, "Bryce Canyon City") #Write city
 can.drawString(500, 600, "UT") #Write state
 can.drawString(537, 600, "84120") #Write zipcode
@@ -67,10 +67,9 @@ page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
 
 # finally, write "output" to a real file
-outputStream = open("destination.pdf", "wb")
+outputStream = open(f"{sys.argv[1]}.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
-print('file saved')
-webbrowser.open_new('.\destination.pdf')
-# time.sleep(30)
+time.sleep(5)
+webbrowser.open_new(f"{sys.argv[1]}.pdf")
 # os.remove('.\destination.pdf')
