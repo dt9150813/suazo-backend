@@ -39,6 +39,6 @@ app.get('/:uid', function (req, res) {
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
-const open = require('open');
+//const open = require('open');
 //opens the url in the default browser
 // open('http://localhost:3000/96GVO2bM0sj7GzYonzuk');
