@@ -14,7 +14,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 // Document ID for testing: 3OLLxLj7dmLbRbb2MPFT
-async function getUserData(id) {
+async function getUserData(id,res) {
   console.log(`ID passed to the async function: ${id}`)
   const data = db.collection('users').doc(id);
   const doc = await data.get();
@@ -29,7 +29,8 @@ async function getUserData(id) {
   });
   console.log('start waiting')
   await delay(10000);
-  console.log('waited 5s')
+  console.log('waited 10s')
+  res.download(`../tmp/${id}.pdf`);
   // console.log('run open')
   // open(`../tmp/${id}.pdf`)
 }
@@ -43,7 +44,7 @@ app.listen(port, function () {
 app.get('/:uid', function (req, res) {
   var id = req.params.uid;
   console.log(`ID found from URL: ${id}. Start getUserData func`);
-  getUserData(id);
+  getUserData(id, res);
   // var filePath = `../tmp/${id}.pdf`;
   // fs.readFile(__dirname + filePath, function (err, data) {
   //   res.contentType("application/pdf");
