@@ -28,7 +28,7 @@ async function getUserData(id) {
     console.log(`stdout: ${data}`);
   });
   console.log('start waiting')
-  await delay(5000);
+  await delay(10000);
   console.log('waited 5s')
   // console.log('run open')
   // open(`../tmp/${id}.pdf`)
