@@ -30,8 +30,8 @@ async function getUserData(id) {
   console.log('start waiting')
   await delay(5000);
   console.log('waited 5s')
-  console.log('run open')
-  open(`../tmp/${id}.pdf`)
+  // console.log('run open')
+  // open(`../tmp/${id}.pdf`)
 }
 const app = require('express')(),
   fs = require('fs'),
