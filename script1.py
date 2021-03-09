@@ -7,10 +7,13 @@ from reportlab.lib.pagesizes import letter
 import webbrowser
 import time
 
+print('# Python script started')
+print('# gettin packet')
 packet = io.BytesIO()
-# create a new PDF with Reportlab
+print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
+print('# start editing pdf')
 can.drawString(195, 630, sys.argv[2]) #Owner name as sys.argv[1]
 can.drawString(195, 600, sys.argv[3]) #Write address
 can.drawString(381, 600, "Bryce Canyon City") #Write city
@@ -53,20 +56,21 @@ can.drawString(255.5, 142, "X") #Female no
 can.drawString(184.5, 129, "X") #Minority yes
 can.drawString(255.5, 126, "X") #Minority no
 can.drawString(404, 130, "Specification")
+print('# finish editing pdf')
 can.save()
-
-#move to the beginning of the StringIO buffer
+print('# canvas saved')
+print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
-# read your existing PDF
+print('# read your existing PDF')
 existing_pdf = PdfFileReader(open("test.pdf", "rb"))
 output = PdfFileWriter()
-# add the "watermark" (which is the new pdf) on the existing page
+print('# add the "watermark" (which is the new pdf) on the existing page')
 page = existing_pdf.getPage(0)
 page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
 
-# finally, write "output" to a real file
+print('# finally, write "output" to a real file')
 outputStream = open(f"{sys.argv[1]}.pdf", "wb")
 output.write(outputStream)
 outputStream.close()

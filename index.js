@@ -21,7 +21,12 @@ async function getUserData(id) {
   } else {
     console.log('Document data:', doc.data());
   }
+  // console.log("Python start")
   const python = spawn('python', ['script1.py', id, doc.get('name'), doc.get('Adress'), doc.get('city'), doc.get('State'), doc.get('Zip')]);
+  python.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`);
+  });
+  // console.log("Python end")
 }
 const app = require('express')(),
   fs = require('fs'),
