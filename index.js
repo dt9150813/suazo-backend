@@ -1,6 +1,5 @@
 const firebase = require('firebase');
 const { spawn } = require('child_process');
-const open = require('open');
 const app = require('express')(),
   fs = require('fs'),
   port = process.env.PORT || 3000
@@ -54,7 +53,7 @@ async function ss4(id, res) {
   // console.log('start waiting')
   // await delay(10000);
   // console.log('waited 10s')
-  res.download(`../tmp/${id}_ss4.pdf`);
+  // res.download(`../tmp/${id}_ss4.pdf`);
 }
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {
