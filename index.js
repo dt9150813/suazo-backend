@@ -22,7 +22,7 @@ async function certificateOfOrganization(id, res) {
   if (!doc.exists) {
     console.log('No such document!');
   } else {
-    console.log('Document data:', doc.data());
+    console.log('Data found');
   }
   const python = spawn('python', ['certificate_of_organization.py', id]);
   python.stdout.on('data', (data) => {
@@ -50,10 +50,10 @@ async function ss4(id, res) {
   });
   python.stdin.write(JSON.stringify(doc.data())) // Passing firebase data into the python script
   python.stdin.end()
-  // console.log('start waiting')
-  // await delay(10000);
-  // console.log('waited 10s')
-  // res.download(`../tmp/${id}_ss4.pdf`);
+  console.log('start waiting')
+  await delay(10000);
+  console.log('waited 10s')
+  res.download(`../tmp/${id}_ss4.pdf`);
 }
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {
