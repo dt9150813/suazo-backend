@@ -18,7 +18,7 @@ can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
 print('# start editing pdf')
 can.drawString(55, 687, 'businessName')   #1
-can.drawString(55, 665, 'businessName')   #2
+can.drawString(55, 665, data['businessName'])   #2
 can.drawString(300, 665, 'businessName')  #3
 can.drawString(55, 640, 'businessName')   #4a
 can.drawString(55, 615, 'businessName')   #4b

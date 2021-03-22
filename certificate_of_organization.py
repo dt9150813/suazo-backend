@@ -22,10 +22,10 @@ can.drawString(195, 600, data['businessStreet'])    # Write address
 can.drawString(381, 600, data['businessCity'])  # Write city
 can.drawString(500, 600, data['businessState']) # Write state
 can.drawString(537, 600, data['businessZipcode'])   # Write zipcode
-can.drawString(40, 563, "Registered agent")
-can.drawString(150, 534, "Address of the agent")
-can.drawString(45, 508, "Agent city")
-can.drawString(510, 508, "84120")
+can.drawString(40, 563, data['ownerList'][data['primaryOwnerIndex']]['firstName'])
+can.drawString(150, 534, data['ownerList'][data['primaryOwnerIndex']]['street'])
+can.drawString(45, 508, data['ownerList'][data['primaryOwnerIndex']]['city'])
+can.drawString(510, 508, data['ownerList'][data['primaryOwnerIndex']]['zipcode'])
 can.drawString(138, 452, data['ownerList'][0]['firstName'])
 can.drawString(457, 452, "Position of #1")
 can.drawString(138, 428, data['ownerList'][0]['street'])
