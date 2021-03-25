@@ -6,19 +6,19 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import json
 print('# Python script started')
-print(sys.argv[1])
-lines = sys.stdin.readlines()
-parsed = (sys.argv[1])
-data = json.loads(lines[0])
-print(data['businessName'])
+# print(sys.argv[1])
+# lines = sys.stdin.readlines()
+# parsed = (sys.argv[1])
+# data = json.loads(lines[0])
+# print(data['businessName'])
 print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
 print('# start editing pdf')
-can.drawString(195, 630, data['businessName'])  # Owner name as sys.argv[1]
-can.drawString(195, 600, data['businessStreet'])  # Write address
+can.drawString(195, 630, 'businessName')  # Owner name as sys.argv[1]
+can.drawString(195, 600, 'businessStreet')  # Write address
 can.drawString(381, 600, "Bryce Canyon City")  # Write city
 can.drawString(500, 600, "UT")  # Write state
 can.drawString(537, 600, "84120")  # Write zipcode
@@ -73,7 +73,7 @@ page = existing_pdf.getPage(0)
 page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
 print('# finally, write "output" to a real file')
-outputStream = open(f"../tmp/{sys.argv[1]}_Certificate_of_Organization.pdf", "wb")
+outputStream = open(f"../tmp/testCoo.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 print('# script done')

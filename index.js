@@ -24,7 +24,7 @@ async function certificateOfOrganization(id, res) {
   } else {
     console.log('Data found');
   }
-  const python = spawn('python', ['certificate_of_organization.py', id]);
+  const python = spawn('python', ['coo.py', id]);
   python.stdout.on('data', (data) => {
     console.log(`stdout: ${data}`);
   });
@@ -33,7 +33,7 @@ async function certificateOfOrganization(id, res) {
   console.log('start waiting')
   await delay(10000);
   console.log('waited 10s')
-  res.download(`../tmp/${id}_Certificate_of_Organization.pdf`);
+  res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g,"_")}_Certificate_of_Organization.pdf`);
 }
 async function ss4(id, res) {
   console.log(`ID passed to the async function: ${id}`)
@@ -53,7 +53,7 @@ async function ss4(id, res) {
   console.log('start waiting')
   await delay(10000);
   console.log('waited 10s')
-  res.download(`../tmp/${id}_ss4.pdf`);
+  res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g,"_")}_ss4.pdf`);
 }
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {

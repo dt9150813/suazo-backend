@@ -1,3 +1,7 @@
+# This Python script takes data input from the node server,
+# prints the data on an empty IRS SS4 form,
+# and save the file as [businessName]_ss4.pdf
+
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
 import sys
@@ -6,24 +10,24 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 import json
 print('# Python script started')
-# print(sys.argv[1])
-# lines = sys.stdin.readlines()
-# parsed = (sys.argv[1])
-# data = json.loads(lines[0])
-# print(data['businessName'])
+print(sys.argv[1])
+lines = sys.stdin.readlines()
+parsed = (sys.argv[1])
+data = json.loads(lines[0])
+print(data['businessName'])
 print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
 print('# start editing pdf')
-can.drawString(55, 687, 'businessName')   #1
+can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'])   #1
 can.drawString(55, 665, data['businessName'])   #2
-can.drawString(300, 665, 'businessName')  #3
-can.drawString(55, 640, 'businessName')   #4a
-can.drawString(55, 615, 'businessName')   #4b
-can.drawString(300, 640, 'businessName')  #5a
-can.drawString(300, 615, 'businessName')  #5b
+can.drawString(300, 665, 'Executor')  #3
+can.drawString(55, 640, data['ownerList'][data['primaryOwnerIndex']]['street'])   #4a
+can.drawString(55, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] +data['ownerList'][data['primaryOwnerIndex']]['zipcode'])   #4b
+can.drawString(300, 640, 'Executor Address')  #5a
+can.drawString(300, 615, 'Executor City, state and zip')  #5b
 can.drawString(55, 590, 'businessName')   #6
 can.drawString(55, 567, 'businessName')   #7a
 can.drawString(340, 567, 'businessName')  #7b
@@ -69,7 +73,8 @@ page = existing_pdf.getPage(0)
 page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
 print('# finally, write "output" to a real file')
-outputStream = open(f"../tmp/{sys.argv[1]}_ss4.pdf", "wb")
+businessNameModified = str(data['businessName']).replace(" ", "_")  # Replace space in the business name with underscores to avoid file name error
+outputStream = open(f"../tmp/{businessNameModified}_ss4.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 print('# script done')

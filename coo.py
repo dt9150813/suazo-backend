@@ -1,3 +1,7 @@
+# This Python script takes data input from the node server,
+# prints the data on an empty Utah certificate of organization form,
+# and save the file as [businessName]_Certificate_of_Organization.pdf
+
 from PyPDF2 import PdfFileWriter, PdfFileReader
 import io
 import sys
@@ -17,12 +21,12 @@ print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 # can.setFont(self, "Times-Roman", 11)
 print('# start editing pdf')
-can.drawString(195, 630, data['businessName'])  # Owner name as sys.argv[1]
-can.drawString(195, 600, data['businessStreet'])    # Write address
-can.drawString(381, 600, data['businessCity'])  # Write city
-can.drawString(500, 600, data['businessState']) # Write state
-can.drawString(537, 600, data['businessZipcode'])   # Write zipcode
-can.drawString(40, 563, data['ownerList'][data['primaryOwnerIndex']]['firstName'])
+can.drawString(195, 630, data['businessName'])  # Print business name
+can.drawString(195, 600, data['businessStreet'])    # Print business streeet
+can.drawString(381, 600, data['businessCity'])  # Print business city
+can.drawString(500, 600, "UT")  # Print hardcoded UT as this is a UT certificate of organization
+can.drawString(537, 600, data['businessZipcode'])   # Print business zipcode
+can.drawString(40, 563, data['ownerList'][data['primaryOwnerIndex']]['firstName'])  # Print primary owner as registered agent in item3
 can.drawString(150, 534, data['ownerList'][data['primaryOwnerIndex']]['street'])
 can.drawString(45, 508, data['ownerList'][data['primaryOwnerIndex']]['city'])
 can.drawString(510, 508, data['ownerList'][data['primaryOwnerIndex']]['zipcode'])
@@ -76,7 +80,8 @@ page = existing_pdf.getPage(0)
 page.mergePage(new_pdf.getPage(0))
 output.addPage(page)
 print('# finally, write "output" to a real file')
-outputStream = open(f"../tmp/{sys.argv[1]}_Certificate_of_Organization.pdf", "wb")
+businessNameModified = str(data['businessName']).replace(" ", "_")  # Replace space in the business name with underscores to avoid file name error
+outputStream = open(f"../tmp/{businessNameModified}_Certificate_of_Organization.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
 print('# script done')
