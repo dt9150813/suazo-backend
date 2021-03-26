@@ -71,4 +71,3 @@ app.get('/ss4/:uid', function (req, res) {
   console.log(`ID found from URL: ${id}. Start getUserData func`);
   ss4(id, res);
 });
-//opens the url in the default browser
