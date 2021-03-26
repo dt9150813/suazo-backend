@@ -16,73 +16,65 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Document ID for testing: 3OLLxLj7dmLbRbb2MPFT
-async function getUserData(id, res) {
-    // var promise = new Promise(function (resolve, reject) {
-    //     // do a thing, possibly async, then…
+// Document ID for testing: n13JX6KUJVWTrb78OkCvIIXp71G2
 
-    //     if (/* everything turned out fine */) {
-    //         resolve("Stuff worked!");
-    //     }
-    //     else {
-    //         reject(Error("It broke"));
-    //     }
-    // });
-    console.log(`ID passed to the async function: ${id}`)
-    const data = db.collection('users').doc(id);
-    const doc = await data.get();
+async function getUserData(id) {
+    var data = db.collection('users').doc(id);
+    var doc = await data.get();
     if (!doc.exists) {
-        console.log('No such document!');
+        console.log('No such document!')
     } else {
-        console.log('Document data:', doc.data());
+        console.log('Data found');
+        console.log(doc.data());
     }
-    const python = spawn('python', ['script1.py', id]);
-    python.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-    python.stdin.write(JSON.stringify(doc.data()))
-    python.stdin.end()
-    // python.stdin.write(JSON.stringify(doc.data()))
-    // python.stdin.end()
-    // console.log('start waiting')
-    // await delay(5000);
-    // console.log('waited 5s')
-    // res.download(`../tmp/${id}.pdf`);
     return new Promise((resolve, reject) => {
         setTimeout(
             () => {
-                console.log("Inside the promise");
-                if (resolvedFlag == true) {
-                    resolve(res);
+                if (true) {
+                    resolve(doc.data());
                 } else {
-                    reject("Rejected")
+                    reject("Something went wrong in getUserData")
                 }
             }, 2000
         );
     });
+}
+
+async function coo(id, res) {
+    getUserData(id).then((value)=>{
+        
+    });
+    // const python = spawn('python', ['coo.py']);
+    // python.stdout.on('data', (data) => {
+    //     console.log(`stdout: ${data}`);
+    // });
+    // python.stdin.write(JSON.stringify(userData));
+    // python.stdin.end()
+    // return new Promise((resolve, reject) => {
+    //     setTimeout(
+    //         () => {
+    //             console.log("Inside the promise");
+    //             if (resolvedFlag == true) {
+    //                 resolve(res);
+    //             } else {
+    //                 reject("Rejected")
+    //             }
+    //         }, 2000
+    //     );
+    // });
 }
 var resolvedFlag = true;
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {
     console.log(`Listening on port ${port}`);
 });
-app.get('/:uid', function (req, res) {
+app.get('/coo/:uid', function (req, res) {
     var id = req.params.uid;
-    console.log(`ID found from URL: ${id}. Start getUserData func`);
-    // getUserData(id, res);
-    console.log(res)
-    let myPromise = getUserData(id, res);
-    myPromise.then((res) => {
-        res.download(`../tmp/${id}_Certificate_of_Organization.pdf`);
+    let myPromise = coo(id, res);
+    myPromise.then((value) => {
+        console.log(value);
+        // res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g, "_")}_Certificate_of_Organization.pdf`);
     }).catch((error) => {
         console.log(`Handling error as we received ${error}`);
     });
-
-    // fs.unlink('96GVO2bM0sj7GzYonzuk.pdf', (err)=>{if (err){throw err;} console.log("file deleted"); });
-    // var filePath = `../tmp/${id}.pdf`;
-    // fs.readFile(__dirname + filePath, function (err, data) {
-    //   res.contentType("application/pdf");
-    //   res.send(data);
-    // });
 });
-//opens the url in the default browser

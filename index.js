@@ -15,7 +15,8 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-async function certificateOfOrganization(id, res) {
+
+async function coo(id, res) {
   console.log(`ID passed to the async function: ${id}`)
   const data = db.collection('users').doc(id);
   const doc = await data.get();
@@ -35,6 +36,7 @@ async function certificateOfOrganization(id, res) {
   console.log('waited 10s')
   res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g,"_")}_Certificate_of_Organization.pdf`);
 }
+
 async function ss4(id, res) {
   console.log(`ID passed to the async function: ${id}`)
   const data = db.collection('users').doc(id);
@@ -42,7 +44,7 @@ async function ss4(id, res) {
   if (!doc.exists) {
     console.log('No such document!');
   } else {
-    console.log('Document data:', doc.data());
+    console.log('Data found');
   }
   const python = spawn('python', ['ss4.py', id]);
   python.stdout.on('data', (data) => {
@@ -62,7 +64,7 @@ app.listen(port, function () {
 app.get('/coo/:uid', function (req, res) {
   var id = req.params.uid;
   console.log(`ID found from URL: ${id}. Start getUserData func`);
-  certificateOfOrganization(id, res);
+  coo(id, res);
 });
 app.get('/ss4/:uid', function (req, res) {
   var id = req.params.uid;

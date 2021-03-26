@@ -8,8 +8,12 @@ import sys
 import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import json
+
 print('# Python script started')
+pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 print(sys.argv[1])
 lines = sys.stdin.readlines()
 parsed = (sys.argv[1])
@@ -19,7 +23,7 @@ print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
-# can.setFont(self, "Times-Roman", 11)
+can.setFont('public-sans', 11)
 print('# start editing pdf')
 can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'])   #1
 can.drawString(55, 665, data['businessName'])   #2

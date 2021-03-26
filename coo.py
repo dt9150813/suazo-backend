@@ -8,18 +8,20 @@ import sys
 import os
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import json
+
 print('# Python script started')
-print(sys.argv[1])
+pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 lines = sys.stdin.readlines()
-parsed = (sys.argv[1])
 data = json.loads(lines[0])
 print(len(data['ownerList']))
 print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
-# can.setFont(self, "Times-Roman", 11)
+can.setFont('public-sans', 11)
 print('# start editing pdf')
 can.drawString(195, 630, data['businessName'])  # Print business name
 can.drawString(195, 600, data['businessStreet'])    # Print business streeet
@@ -73,7 +75,7 @@ print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
 print('# read your existing PDF')
-existing_pdf = PdfFileReader(open("test.pdf", "rb"))
+existing_pdf = PdfFileReader(open("coo.pdf", "rb"))
 output = PdfFileWriter()
 print('# add the "watermark" (which is the new pdf) on the existing page')
 page = existing_pdf.getPage(0)
