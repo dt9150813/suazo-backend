@@ -16,6 +16,9 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const nodemailer = require("nodemailer");
+
+
 // Document ID for testing: n13JX6KUJVWTrb78OkCvIIXp71G2
 
 async function getUserData(uid) {
@@ -69,13 +72,45 @@ async function coo(uid) {
     // });
 }
 
-async function download(res, uid) {
-    var cooResult = await coo(uid);
-    console.log(cooResult);
-    // res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
+// async function download(res, uid) {
+//     var cooResult = await coo(uid);
+//     console.log(cooResult);
+//     // res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
+// }
+
+// var resolvedFlag = true;
+
+async function email() {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+            user: "sauzoautogenerator@gmail.com", // generated ethereal user
+            pass: "Strongpassword", // generated ethereal password
+        },
+    });
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+        from: '"Suazo Business Center" <sauzoautogenerator@gmail.com>', // sender address
+        to: "eddy0712@gmail.com, zhujl97@gmail.com", // list of receivers
+        subject: "Utah LLC document", // Subject line
+        text: "Hello,\n\nHere is your Utah LLC PDF file.\n\nSincerely,\n\nSuazo Business Center", // plain text body
+        // html: "<b>Hello world?</b>", // html body
+        attachments: [{
+            filename: 'ASD_FG_Inc_Certificate_of_Organization.pdf',
+            path: '../tmp/ASD_FG_Inc_Certificate_of_Organization.pdf',
+            contentType: 'application/pdf'
+        }],
+    });
+
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 }
 
-var resolvedFlag = true;
+
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {
     console.log(`Listening on port ${port}`);
@@ -103,3 +138,12 @@ app.get('/:method/:file/:uid', function (req, res) {
     //     console.log(`Handling error as we received ${error}`);
     // });
 });
+app.get('/emailtest', function (req, res) {
+    email();
+});
+app.get('/file/:fileName', function(req, res) {
+    var fileName = req.params.fileName;
+    var data = fs.readFileSync(`../tmp/${fileName}`);
+    res.contentType("application/pdf");
+    res.send(data);
+})
