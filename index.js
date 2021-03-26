@@ -1,5 +1,6 @@
 const firebase = require('firebase');
 const { spawn } = require('child_process');
+const util = require('util');
 const app = require('express')(),
   fs = require('fs'),
   port = process.env.PORT || 3000
@@ -25,16 +26,20 @@ async function coo(id, res) {
   } else {
     console.log('Data found');
   }
-  const python = spawn('python', ['coo.py', id]);
-  python.stdout.on('data', (data) => {
-    console.log(`stdout: ${data}`);
+  const fileCreation = new Promise((resolve, reject) => {
+    const python = spawn('python', ['coo.py', JSON.stringify(doc.data())]);
+    python.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+    python.stdin.write(JSON.stringify(doc.data()))
+    python.stdin.end()
+    python.on('close', () => {
+      resolve();
+    });
   });
-  python.stdin.write(JSON.stringify(doc.data()))
-  python.stdin.end()
-  console.log('start waiting')
-  await delay(10000);
-  console.log('waited 10s')
-  res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g,"_")}_Certificate_of_Organization.pdf`);
+  fileCreation.then(() => {
+    res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g, "_")}_Certificate_of_Organization.pdf`);
+  });
 }
 
 async function ss4(id, res) {
@@ -55,7 +60,7 @@ async function ss4(id, res) {
   console.log('start waiting')
   await delay(10000);
   console.log('waited 10s')
-  res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g,"_")}_ss4.pdf`);
+  res.download(`../tmp/${String(doc.get('businessName')).replace(/ /g, "_")}_ss4.pdf`);
 }
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.listen(port, function () {

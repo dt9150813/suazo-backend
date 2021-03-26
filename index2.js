@@ -36,18 +36,19 @@ async function coo(uid) {
     });
     python.stdin.write(JSON.stringify(userData));
     python.stdin.end()
-    console.log(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`);
+    filePath = `../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`;
+    console.log("FilePath found in coo function: ", filePath);
     // return `../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`;
     return new Promise((resolve, reject) => {
         setTimeout(
             () => {
                 console.log("Inside the promise");
-                if (resolvedFlag == true) {
-                    resolve(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`);
+                if (fs.existsSync(filePath)) {
+                    resolve(filePath);
                 } else {
                     reject("Rejected")
                 }
-            }, 5000
+            }, 0
         );
     });
     // getUserData(uid).then((userData) => {
@@ -72,11 +73,11 @@ async function coo(uid) {
     // });
 }
 
-// async function download(res, uid) {
-//     var cooResult = await coo(uid);
-//     console.log(cooResult);
-//     // res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
-// }
+async function download(res, uid) {
+    var cooResult = await coo(uid);
+    console.log(cooResult);
+    // res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
+}
 
 // var resolvedFlag = true;
 
@@ -107,7 +108,6 @@ async function email() {
     });
 
     console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 }
 
 
@@ -117,12 +117,13 @@ app.listen(port, function () {
 });
 app.get('/coo/:uid', function (req, res) {
     var uid = req.params.uid;
-    coo(uid).then((filePath) => {
-        console.log("file path after coo function: ", filePath);
-        res.download(filePath);
-    }).catch((error) => {
-        console.log(`Handling error as we received ${error}`);
-    });
+    coo(uid);
+    // .then((filePath) => {
+    //     console.log("file path after coo function: ", filePath);
+    //     res.download(filePath);
+    // }).catch((error) => {
+    //     console.log(`Handling error as we received ${error}`);
+    // });
 });
 app.get('/:method/:file/:uid', function (req, res) {
     // var method = req.params.method;
