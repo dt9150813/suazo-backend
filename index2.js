@@ -76,7 +76,7 @@ async function coo(uid) {
 async function download(res, uid) {
     var cooResult = await coo(uid);
     console.log(cooResult);
-    // res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
+    res.download(`../tmp/${businessName}_Certificate_of_Organization.pdf`);
 }
 
 // var resolvedFlag = true;
@@ -106,7 +106,6 @@ async function email() {
             contentType: 'application/pdf'
         }],
     });
-
     console.log("Message sent: %s", info.messageId);
 }
 

@@ -11,10 +11,10 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import json
+import time
 
 print('# Python script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
-# lines = sys.stdin.readlines()
 data = json.loads(sys.argv[1])
 print(len(data['ownerList']))
 print('# gettin packet')

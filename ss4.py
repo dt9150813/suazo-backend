@@ -14,10 +14,7 @@ import json
 
 print('# Python script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
-print(sys.argv[1])
-lines = sys.stdin.readlines()
-parsed = (sys.argv[1])
-data = json.loads(lines[0])
+data = json.loads(sys.argv[1])
 print(data['businessName'])
 print('# gettin packet')
 packet = io.BytesIO()
