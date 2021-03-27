@@ -126,6 +126,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
     downloadFile(res, filePath);
   } else if (method == "email") {
     email(file, filePath);
+    res.send();
   } else if (method == "mail") {
     console.log("Mail method is coming soon!")
   } else {
