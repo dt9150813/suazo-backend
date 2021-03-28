@@ -43,7 +43,7 @@ async function coo(uid) {
 }
 
 async function ss4(uid) {
-  userData = await getUserData(uid);
+  var userData = await getUserData(uid);
   console.log("userData from getUserData: ", userData);
   return new Promise((resolve, reject) => {
     const python = spawn('python', ['ss4.py', JSON.stringify(userData)]);
@@ -56,9 +56,11 @@ async function ss4(uid) {
   });
 }
 
-async function email(file, filePath) {
+async function email(uid, file, filePath) {
   var emailSubject;
   var emailText;
+  var userData = await getUserData(uid);
+  var emailRecipient = userData['email'];
   if (file == "coo") {
     emailSubject = "Utah LLC Document"
     emailText = "Hello,\n\nHere is your Utah LLC PDF file.\n\nSincerely,\n\nSuazo Business Center"
@@ -79,7 +81,7 @@ async function email(file, filePath) {
   // send mail with defined transport object
   let info = await transporter.sendMail({
     from: '"Suazo Business Center" <sauzoautogenerator@gmail.com>', // sender address
-    to: "eddy0712@gmail.com, zhujl97@gmail.com", // list of receivers
+    to: emailRecipient, // list of receivers
     subject: emailSubject, // Subject line
     text: emailText, // plain text body
     // html: "<b>Hello world?</b>", // html body
@@ -125,7 +127,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
   if (method == "download") {
     downloadFile(res, filePath);
   } else if (method == "email") {
-    email(file, filePath);
+    email(uid, file, filePath);
     res.send();
   } else if (method == "mail") {
     console.log("Mail method is coming soon!")
