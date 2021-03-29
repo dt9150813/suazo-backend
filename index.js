@@ -1,10 +1,11 @@
 const firebase = require('firebase');
 const { spawn } = require('child_process');
 const util = require('util');
-const app = require('express')(),
-  fs = require('fs'),
-  nodemailer = require("nodemailer"),
-  port = process.env.PORT || 3000
+const app = require('express')();
+const fs = require('fs');
+const nodemailer = require("nodemailer");
+const port = process.env.PORT || 3000;
+
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
   authDomain: "suazoapp.firebaseapp.com",
@@ -126,14 +127,18 @@ app.get('/:file/:method/:uid', async function (req, res) {
 
   if (method == "download") {
     downloadFile(res, filePath);
+    console.log("File downloaded");
   } else if (method == "email") {
-    email(uid, file, filePath);
-    res.send();
+    await email(uid, file, filePath);
+    console.log("Email sent");
   } else if (method == "mail") {
     console.log("Mail method is coming soon!")
   } else {
     console.log("This method doesn't exist!");
-    res.send();
   }
+  fs.unlink(filePath, (err) => {
+    if (err) console.log(err);
+    else console.log("Removed ", filePath);
+  });
   return;
 });

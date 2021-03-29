@@ -18,11 +18,16 @@
   },
   "homepage": "https://gitlab.com/dt9150813/suazo-backend#readme",
   "dependencies": {
+    "@types/node": "^14.14.37",
+    "bluebird": "^3.7.2",
+    "child_process": "^1.0.2",
+    "clicksend": "file:node_modules/clicksend",
     "express": "^4.17.1",
+    "firebase": "^8.2.9",
+    "http": "0.0.1-security",
+    "nodemailer": "^6.5.0",
     "nodemon": "^2.0.7",
     "open": "^7.4.2",
-    "firebase": "^8.2.9",
-    "child_process": "^1.0.2",
-    "nodemailer": "^6.5.0"
+    "request": "^2.88.2"
   }
 }
