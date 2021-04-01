@@ -1,6 +1,5 @@
 const firebase = require('firebase');
 const { spawn } = require('child_process');
-const util = require('util');
 const app = require('express')();
 const fs = require('fs');
 const nodemailer = require("nodemailer");
@@ -31,7 +30,7 @@ function downloadFile(res, filePath) {
 
 async function coo(uid) {
   userData = await getUserData(uid);
-  console.log("userData from getUserData: ", userData);
+  // console.log("userData from getUserData: ", userData);
   return new Promise((resolve, reject) => {
     const python = spawn('python', ['coo.py', JSON.stringify(userData)]);
     python.stdout.on('data', (data) => {
@@ -45,7 +44,6 @@ async function coo(uid) {
 
 async function ss4(uid) {
   var userData = await getUserData(uid);
-  console.log("userData from getUserData: ", userData);
   return new Promise((resolve, reject) => {
     const python = spawn('python', ['ss4.py', JSON.stringify(userData)]);
     python.stdout.on('data', (data) => {
@@ -95,6 +93,19 @@ async function email(uid, file, filePath) {
   console.log("Message sent: %s", info.messageId);
 }
 
+async function mail(uid, filePath) {
+  userData = await getUserData(uid);
+  return new Promise((resolve, reject) => {
+    const python = spawn('python', ['stannp.py', JSON.stringify(userData), filePath]);
+    python.stdout.on('data', (data) => {
+      console.log(`stdout: ${data}`);
+    });
+    python.on('close', () => {
+      resolve(console.log("mail function done"));
+    });
+  });
+}
+
 app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
@@ -109,6 +120,13 @@ app.get('/ss4/:uid', function (req, res) {
   res.send();
 });
 
+app.get('/file/:fileName', function (req, res) {
+  var fileName = req.params.fileName;
+  var data = fs.readFileSync(`../tmp/${fileName}`);
+  res.contentType("application/pdf");
+  res.send(data);
+})
+
 app.get('/:file/:method/:uid', async function (req, res) {
   var file = req.params.file;
   var method = req.params.method;
@@ -122,7 +140,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
     console.log("ss4 function done");
   } else {
     console.log("File type doesn't exist!");
-    res.send();
+    res.sendStatus(404);
   }
 
   if (method == "download") {
@@ -132,9 +150,16 @@ app.get('/:file/:method/:uid', async function (req, res) {
     await email(uid, file, filePath);
     console.log("Email sent");
   } else if (method == "mail") {
-    console.log("Mail method is coming soon!")
+    await mail(uid, filePath)
+    console.log("Mail sent")
+  } else if (method == "view") {
+    var data = fs.readFileSync(filePath);
+    res.contentType("application/pdf");
+    res.send(data);
+    console.log("Pdf sent to browser")
   } else {
     console.log("This method doesn't exist!");
+    res.sendStatus(404);
   }
   fs.unlink(filePath, (err) => {
     if (err) console.log(err);

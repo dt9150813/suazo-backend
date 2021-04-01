@@ -21,7 +21,6 @@
     "@types/node": "^14.14.37",
     "bluebird": "^3.7.2",
     "child_process": "^1.0.2",
-    "clicksend": "file:node_modules/clicksend",
     "express": "^4.17.1",
     "firebase": "^8.2.9",
     "http": "0.0.1-security",

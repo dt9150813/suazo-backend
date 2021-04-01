@@ -22,11 +22,11 @@ print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 can.setFont('public-sans', 11)
 print('# start editing pdf')
-can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'])   #1
+can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])   #1
 can.drawString(55, 665, data['businessName'])   #2
 can.drawString(300, 665, 'Executor')  #3
 can.drawString(55, 640, data['ownerList'][data['primaryOwnerIndex']]['street'])   #4a
-can.drawString(55, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] +data['ownerList'][data['primaryOwnerIndex']]['zipcode'])   #4b
+can.drawString(55, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] + ", " + data['ownerList'][data['primaryOwnerIndex']]['state'] + " " + data['ownerList'][data['primaryOwnerIndex']]['zipcode'])   #4b
 can.drawString(300, 640, 'Executor Address')  #5a
 can.drawString(300, 615, 'Executor City, state and zip')  #5b
 can.drawString(55, 590, 'businessName')   #6
@@ -67,7 +67,7 @@ print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
 print('# read your existing PDF')
-existing_pdf = PdfFileReader(open("fss4.pdf", "rb"))
+existing_pdf = PdfFileReader(open("ss4.pdf", "rb"))
 output = PdfFileWriter()
 print('# add the "watermark" (which is the new pdf) on the existing page')
 page = existing_pdf.getPage(0)
