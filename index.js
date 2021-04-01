@@ -167,3 +167,50 @@ app.get('/:file/:method/:uid', async function (req, res) {
   // });
   return;
 });
+
+app.get('/businessNameCheck/:name', async function (req, res) {
+  const puppeteer = require("puppeteer-extra");
+  const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+  const randomUserAgent = require("random-useragent");
+
+  puppeteer.use(StealthPlugin());
+
+  let businessName = req.params.name;
+  console.log("no, you're stupid");
+  const browser = await puppeteer.launch({ headless: false });
+  const page = await browser.newPage();
+
+  while (1) {
+    await page.goto("https://secure.utah.gov/bes");
+    await page.evaluate(() => {
+      document.querySelector("input[name=businessName]").value = "";
+    });
+    await page.type("input[name=businessName]", businessName, { delay: 30 });
+    await page.setUserAgent(randomUserAgent.getRandom());
+    await page.click("#searchByNameButton");
+    await page.waitForNavigation();
+
+    const errors = await page.$(".errors");
+
+    if (errors) continue;
+
+    const success = await page.$(".successMessage");
+
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+    if (success !== null) {
+      console.log("Available");
+      res.sendStatus(200);
+      res.end();
+      break;
+    } else {
+      console.log("Unavailable");
+      res.sendStatus(202);
+      res.end();
+      break;
+    }
+  }
+  await browser.close();
+  return;
+});
