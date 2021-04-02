@@ -107,10 +107,9 @@ async function mail(uid, filePath) {
   });
 }
 
-const server = app.listen(port, function () {
+app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
-server.timeout = 90000;
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
@@ -179,7 +178,8 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   puppeteer.use(StealthPlugin());
 
   let businessName = req.params.name;
-  let tryAgain = 0;
+  // we don't allow more than 10 attempts
+  let attemptRemaining = 10;
 
   do {
     console.log('opening browser bot ...');
@@ -206,24 +206,28 @@ app.get('/businessNameCheck/:name', async function (req, res) {
 
     if (success !== null) {
       console.log("Available");
-      tryAgain = 0;
+      attemptRemaining = 0;
       res.sendStatus(200);
       res.end();
     } else if (entities !== null) {
       console.log("Unavailable");
-      tryAgain = 0;
+      attemptRemaining = 0;
       res.sendStatus(202);
       res.end();
     } else {
       // the requested name has no error, no sucess, no existing entities
       // which means something went wrong outside our control, so we try again
-      tryAgain = 1;
+      attemptRemaining--;
+      if (attemptRemaining === 0) {
+        res.sendStatus(408);
+        res.end();
+      }
     }
     // } else {
-    //   tryAgain = 1;
+    //   attemptRemaining = 1;
     // }
     await browser.close();
-  } while (tryAgain)
+  } while (attemptRemaining > 0)
 
   return;
 });
