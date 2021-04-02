@@ -224,9 +224,7 @@ app.get('/businessNameCheck/:name', async function (req, res) {
         tryAgain = 1;
       }
     } else {
-      tryAgain = 0;
-      res.sendStatus(400);
-      res.end();
+      tryAgain = 1;
     }
     await browser.close();
   } while (tryAgain)
