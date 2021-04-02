@@ -15,7 +15,6 @@ import json
 print('# Python script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
-print(data['businessName'])
 print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
@@ -45,19 +44,31 @@ can.drawString(98, 254, "0")   # 13 Agricultural
 can.drawString(185, 254, "0")   # 13 Household
 can.drawString(278, 254, "0")   # 13 Other
 can.drawString(419, 255, "x")   # 14 Check
-can.drawString(321, 219, "x")   # 16 Health care & social assistance
-can.drawString(451, 219, "x")   # 16 Wholesale-agent/broker 
-can.drawString(62, 207, "x")    # 16 Construction 
-can.drawString(126.5, 207, "x") # 16 Rental & leasing 
-can.drawString(206, 207, "x")   # 16 Transportation & warehousing 
-can.drawString(321, 207, "x")   # 16 Accommodation & food service
-can.drawString(451, 207, "x")   # 16 Wholesale-other
-can.drawString(537, 207, "x")   # 16 Retail
-can.drawString(62, 195, "x")    # 16 Real estate
-can.drawString(126.5, 195, "x") # 16 Manufacturing
-can.drawString(206, 195, "x")   # 16 Finance & insurance
-can.drawString(321, 195, "x")   # 16 Other
-can.drawString(404, 195, "Specification")   # 16 Other specification
+if data["businessType"] == 'healthCare':
+    can.drawString(321, 219, "x")   # 16 Health care & social assistance
+elif data["businessType"] == 'wholesaleAgent':
+    can.drawString(451, 219, "x")   # 16 Wholesale-agent/broker
+elif data["businessType"] == 'construction':
+    can.drawString(62, 207, "x")    # 16 Construction
+elif data["businessType"] == 'rentalLeasing':
+    can.drawString(126.5, 207, "x")  # 16 Rental & leasing
+elif data["businessType"] == 'transport':
+    can.drawString(206, 207, "x")   # 16 Transportation & warehousing
+elif data["businessType"] == 'accomodation':
+    can.drawString(321, 207, "x")   # 16 Accommodation & food service
+elif data["businessType"] == 'wholesaleOther':
+    can.drawString(451, 207, "x")   # 16 Wholesale-other
+elif data["businessType"] == 'retail':
+    can.drawString(537, 207, "x")   # 16 Retail
+elif data["businessType"] == 'realEstate':
+    can.drawString(62, 195, "x")    # 16 Real estate
+elif data["businessType"] == 'manufacturing':
+    can.drawString(126.5, 195, "x")  # 16 Manufacturing
+elif data["businessType"] == 'finance':
+    can.drawString(206, 195, "x")   # 16 Finance & insurance
+else:
+    can.drawString(321, 195, "x")   # 16 Other
+    # can.drawString(404, 195, "Specification")   # 16 Other specification
 can.drawString(400, 159, "x")   # 18 No
 can.drawString(435, 62, "80142224000")  # Applicant's telephone number
 print('# finish editing pdf')
