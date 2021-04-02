@@ -23,23 +23,23 @@ can.setFont('public-sans', 11)
 print('# start editing pdf')
 can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])   #1
 can.drawString(55, 665, data['businessName'])   #2
-can.drawString(300, 665, 'Executor')  #3
-can.drawString(55, 640, data['ownerList'][data['primaryOwnerIndex']]['street'])   #4a
-can.drawString(55, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] + ", " + data['ownerList'][data['primaryOwnerIndex']]['state'] + " " + data['ownerList'][data['primaryOwnerIndex']]['zipcode'])   #4b
-can.drawString(300, 640, 'Executor Address')  #5a
-can.drawString(300, 615, 'Executor City, state and zip')  #5b
-can.drawString(55, 590, 'businessName')   #6
+can.drawString(300, 665, data['ownerList'][data['primaryOwnerIndex']]['firstName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  #3
+can.drawString(55, 640, data['businessStreet'])   #4a
+can.drawString(55, 615, data['businessCity'] + ", " + data['businessState'] + " " + data['businessZipcode'])   #4b
+can.drawString(300, 640, data['ownerList'][data['primaryOwnerIndex']]['street'])  #5a
+can.drawString(300, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] + ", " + data['ownerList'][data['primaryOwnerIndex']]['state'] + " " + data['ownerList'][data['primaryOwnerIndex']]['zipcode'])  #5b
+can.drawString(55, 590, 'USA')   #6
 can.drawString(55, 567, 'businessName')   #7a
 can.drawString(340, 567, 'businessName')  #7b
 can.drawString(256, 543, "x")   # 8a Yes
 can.drawString(494, 530, "x")   # 8c Yes
 can.drawString(62, 506.5, "x")  # 9a Sole Proprietor check
-can.drawString(157, 506.5, '12121222121')   # 9a Sole Proprietor mark-SSN
-can.drawString(62, 494.5, "x")  # 9a Partner check
+# can.drawString(157, 506.5, '12121222121')   # 9a Sole Proprietor mark-SSN
+# can.drawString(62, 494.5, "x")  # 9a Partner check
 can.drawString(62, 387, "x")    # 10 Started new business check
-can.drawString(62, 373, "Health care & social assistance")  # 10 Started new business specification
-can.drawString(160, 313.5, '99/99/9999')    # 11
-can.drawString(492, 325, "December")   # 12 Month
+# can.drawString(62, 373, "Health care & social assistance")  # 10 Started new business specification
+# can.drawString(160, 313.5, '99/99/9999')    # 11
+# can.drawString(492, 325, "December")   # 12 Month
 can.drawString(98, 254, "0")   # 13 Agricultural
 can.drawString(185, 254, "0")   # 13 Household
 can.drawString(278, 254, "0")   # 13 Other
@@ -70,7 +70,7 @@ else:
     can.drawString(321, 195, "x")   # 16 Other
     # can.drawString(404, 195, "Specification")   # 16 Other specification
 can.drawString(400, 159, "x")   # 18 No
-can.drawString(435, 62, "80142224000")  # Applicant's telephone number
+# can.drawString(435, 62, "80142224000")  # Applicant's telephone number
 print('# finish editing pdf')
 can.save()
 print('# canvas saved')

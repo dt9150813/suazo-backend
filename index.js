@@ -182,7 +182,7 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   let businessName = req.params.name;
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: ture,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
