@@ -37,7 +37,7 @@ can.drawString(62, 506.5, "x")  # 9a Sole Proprietor check
 # can.drawString(157, 506.5, '12121222121')   # 9a Sole Proprietor mark-SSN
 # can.drawString(62, 494.5, "x")  # 9a Partner check
 can.drawString(62, 387, "x")    # 10 Started new business check
-# can.drawString(62, 373, "Health care & social assistance")  # 10 Started new business specification
+can.drawString(62, 373, data["businessType"])  # 10 Started new business specification
 # can.drawString(160, 313.5, '99/99/9999')    # 11
 # can.drawString(492, 325, "December")   # 12 Month
 can.drawString(98, 254, "0")   # 13 Agricultural
