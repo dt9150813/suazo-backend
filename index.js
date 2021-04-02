@@ -176,8 +176,11 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   puppeteer.use(StealthPlugin());
 
   let businessName = req.params.name;
-  console.log("no, you're stupid");
-  const browser = await puppeteer.launch({ headless: false });
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  })
   const page = await browser.newPage();
 
   while (1) {
