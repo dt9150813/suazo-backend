@@ -184,35 +184,52 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   puppeteer.use(StealthPlugin());
 
   let businessName = req.params.name;
+  let tryAgain = 0;
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  do {
+    let browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
-  const page = await browser.newPage();
+    let page = await browser.newPage();
 
-  await page.goto("https://secure.utah.gov/bes");
-  await page.evaluate(() => {
-    document.querySelector("input[name=businessName]").value = "";
-  });
-  await page.type("input[name=businessName]", businessName, { delay: 30 });
-  await page.setUserAgent(randomUserAgent.getRandom());
-  await page.click("#searchByNameButton");
-  await page.waitForNavigation();
+    await page.goto("https://secure.utah.gov/bes");
+    await page.evaluate(() => {
+      document.querySelector("input[name=businessName]").value = "";
+    });
+    await page.type("input[name=businessName]", businessName, { delay: 30 });
+    await page.setUserAgent(randomUserAgent.getRandom());
+    await page.click("#searchByNameButton");
+    await page.waitForNavigation();
 
-  const success = await page.$(".successMessage");
+    let browserError = await page.$(".errors");
+    if (browserError === null) {
+      let success = await page.$(".successMessage");
+      let entities = await page.$(".entities");
 
-  if (success !== null) {
-    console.log("Available");
-    res.sendStatus(200);
-    res.end();
-  } else {
-    console.log("Unavailable");
-    res.sendStatus(202);
-    res.end();
-  }
+      if (success !== null) {
+        console.log("Available");
+        tryAgain = 0;
+        res.sendStatus(200);
+        res.end();
+      } else if (entities !== null) {
+        console.log("Unavailable");
+        tryAgain = 0;
+        res.sendStatus(202);
+        res.end();
+      } else {
+        // the requested name has no error, no sucess, no existing entities
+        // which means something went wrong outside our control, so we try again
+        tryAgain = 1;
+      }
+    } else {
+      tryAgain = 0;
+      res.sendStatus(400);
+      res.end();
+    }
+    await browser.close();
+  } while (tryAgain)
 
-  await browser.close();
   return;
 });
