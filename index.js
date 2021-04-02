@@ -128,7 +128,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
   var method = req.params.method;
   var uid = req.params.uid;
   var filePath;
-  var mailing = (method == "mail"? ture : false);
+  var mailing = (method == "mail"? true : false);
   if (file == "coo") {
     filePath = await coo(uid, mailing);
     console.log("coo function done");
