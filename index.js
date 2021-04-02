@@ -203,29 +203,29 @@ app.get('/businessNameCheck/:name', async function (req, res) {
     await page.click("#searchByNameButton");
     await page.waitForNavigation();
 
-    let browserError = await page.$(".errors");
-    if (browserError === null) {
-      let success = await page.$(".successMessage");
-      let entities = await page.$(".entities");
+    // let browserError = await page.$(".errors");
+    // if (browserError === null) {
+    let success = await page.$(".successMessage");
+    let entities = await page.$(".entities");
 
-      if (success !== null) {
-        console.log("Available");
-        tryAgain = 0;
-        res.sendStatus(200);
-        res.end();
-      } else if (entities !== null) {
-        console.log("Unavailable");
-        tryAgain = 0;
-        res.sendStatus(202);
-        res.end();
-      } else {
-        // the requested name has no error, no sucess, no existing entities
-        // which means something went wrong outside our control, so we try again
-        tryAgain = 1;
-      }
+    if (success !== null) {
+      console.log("Available");
+      tryAgain = 0;
+      res.sendStatus(200);
+      res.end();
+    } else if (entities !== null) {
+      console.log("Unavailable");
+      tryAgain = 0;
+      res.sendStatus(202);
+      res.end();
     } else {
+      // the requested name has no error, no sucess, no existing entities
+      // which means something went wrong outside our control, so we try again
       tryAgain = 1;
     }
+    // } else {
+    //   tryAgain = 1;
+    // }
     await browser.close();
   } while (tryAgain)
 
