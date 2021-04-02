@@ -29,11 +29,11 @@ function downloadFile(res, filePath) {
   res.download(filePath);
 }
 
-async function coo(uid) {
+async function coo(uid, mailing) {
   userData = await getUserData(uid);
   // console.log("userData from getUserData: ", userData);
   return new Promise((resolve, reject) => {
-    const python = spawn('python', ['coo.py', JSON.stringify(userData)]);
+    const python = spawn('python', ['coo.py', JSON.stringify(userData), mailing]);
     python.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -43,10 +43,10 @@ async function coo(uid) {
   });
 }
 
-async function ss4(uid) {
+async function ss4(uid, mailing) {
   var userData = await getUserData(uid);
   return new Promise((resolve, reject) => {
-    const python = spawn('python', ['ss4.py', JSON.stringify(userData)]);
+    const python = spawn('python', ['ss4.py', JSON.stringify(userData), mailing]);
     python.stdout.on('data', (data) => {
       console.log(`stdout: ${data}`);
     });
@@ -121,13 +121,6 @@ app.get('/ss4/:uid', function (req, res) {
   res.send();
 });
 
-// app.get('/file/:fileName', function (req, res) {
-//   var fileName = req.params.fileName;
-//   var data = fs.readFileSync(`../tmp/${fileName}`);
-//   res.contentType("application/pdf");
-//   res.send(data);
-// })
-
 app.use('/file', express.static('../tmp/'));
 
 app.get('/:file/:method/:uid', async function (req, res) {
@@ -135,12 +128,13 @@ app.get('/:file/:method/:uid', async function (req, res) {
   var method = req.params.method;
   var uid = req.params.uid;
   var filePath;
+  var mailing = (method == "mail"? ture : false);
   if (file == "coo") {
-    filePath = await coo(uid);
+    filePath = await coo(uid, mailing);
     console.log("coo function done");
     console.log(filePath);
   } else if (file == "ss4") {
-    filePath = await ss4(uid);
+    filePath = await ss4(uid, mailing);
     console.log("ss4 function done");
   } else {
     console.log("File type doesn't exist!");

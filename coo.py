@@ -15,7 +15,8 @@ import json
 print('# Python script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
-print(len(data['ownerList']))
+mailing = sys.argv[2]
+print(mailing)
 print('# gettin packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
@@ -27,9 +28,6 @@ can.drawString(195, 600, data['businessStreet'])    # Print business streeet
 can.drawString(381, 600, data['businessCity'])  # Print business city
 can.drawString(500, 600, "UT")  # Print hardcoded UT as this is a UT certificate of organization
 can.drawString(537, 600, data['businessZipcode'])   # Print business zipcode
-# try:
-#     can.drawString(40, 563, data['ownerList'][data['primaryOwnerIndex']]['firstName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['middleName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # Print primary owner as registered agent in item3
-# except:
 can.drawString(40, 563, data['ownerList'][data['primaryOwnerIndex']]['firstName'] + " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])
 can.drawString(150, 534, data['ownerList'][data['primaryOwnerIndex']]['street'])
 can.drawString(45, 508, data['ownerList'][data['primaryOwnerIndex']]['city'])
@@ -81,14 +79,22 @@ print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
 print('# read your existing PDF')
-existing_pdf = PdfFileReader(open("coo.pdf", "rb"))
-output = PdfFileWriter()
-print('# add the "watermark" (which is the new pdf) on the existing page')
-page = existing_pdf.getPage(0)
-output.addPage(page)
-page = existing_pdf.getPage(1)
-page.mergePage(new_pdf.getPage(0))
-output.addPage(page)
+if mailing:
+    existing_pdf = PdfFileReader(open("coo.pdf", "rb"))
+    output = PdfFileWriter()
+    print('# add the "watermark" (which is the new pdf) on the existing page')
+    page = existing_pdf.getPage(0)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
+else:
+    existing_pdf = PdfFileReader(open("coo_mail.pdf", "rb"))
+    output = PdfFileWriter()
+    print('# add the "watermark" (which is the new pdf) on the existing page')
+    page = existing_pdf.getPage(0)
+    output.addPage(page)
+    page = existing_pdf.getPage(1)
+    page.mergePage(new_pdf.getPage(0))
+    output.addPage(page)
 print('# finally, write "output" to a real file')
 businessNameModified = str(data['businessName']).replace(" ", "_")  # Replace space in the business name with underscores to avoid file name error
 outputStream = open(f"../tmp/{businessNameModified}_Certificate_of_Organization.pdf", "wb")
