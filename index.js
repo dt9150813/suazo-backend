@@ -145,6 +145,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
   } else {
     console.log("File type doesn't exist!");
     res.sendStatus(404);
+    return;
   }
 
   if (method == "download") {
