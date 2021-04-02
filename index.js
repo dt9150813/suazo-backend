@@ -107,9 +107,10 @@ async function mail(uid, filePath) {
   });
 }
 
-app.listen(port, function () {
+const server = app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
+server.timeout = 90000;
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
