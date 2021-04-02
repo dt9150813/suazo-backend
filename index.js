@@ -1,5 +1,6 @@
 const firebase = require('firebase');
 const { spawn } = require('child_process');
+const express = require('express');
 const app = require('express')();
 const fs = require('fs');
 const nodemailer = require("nodemailer");
@@ -120,12 +121,14 @@ app.get('/ss4/:uid', function (req, res) {
   res.send();
 });
 
-app.get('/file/:fileName', function (req, res) {
-  var fileName = req.params.fileName;
-  var data = fs.readFileSync(`../tmp/${fileName}`);
-  res.contentType("application/pdf");
-  res.send(data);
-})
+// app.get('/file/:fileName', function (req, res) {
+//   var fileName = req.params.fileName;
+//   var data = fs.readFileSync(`../tmp/${fileName}`);
+//   res.contentType("application/pdf");
+//   res.send(data);
+// })
+
+app.use('/file', express.static('../tmp/'));
 
 app.get('/:file/:method/:uid', async function (req, res) {
   var file = req.params.file;
