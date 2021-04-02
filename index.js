@@ -192,34 +192,27 @@ app.get('/businessNameCheck/:name', async function (req, res) {
 
   const page = await browser.newPage();
 
-  while (1) {
-    await page.goto("https://secure.utah.gov/bes");
-    await page.evaluate(() => {
-      document.querySelector("input[name=businessName]").value = "";
-    });
-    await page.type("input[name=businessName]", businessName, { delay: 30 });
-    await page.setUserAgent(randomUserAgent.getRandom());
-    await page.click("#searchByNameButton");
-    await page.waitForNavigation();
+  await page.goto("https://secure.utah.gov/bes");
+  await page.evaluate(() => {
+    document.querySelector("input[name=businessName]").value = "";
+  });
+  await page.type("input[name=businessName]", businessName, { delay: 30 });
+  await page.setUserAgent(randomUserAgent.getRandom());
+  await page.click("#searchByNameButton");
+  await page.waitForNavigation();
 
-    const errors = await page.$(".errors");
+  const success = await page.$(".successMessage");
 
-    if (errors) continue;
-
-    const success = await page.$(".successMessage");
-
-    if (success !== null) {
-      console.log("Available");
-      res.sendStatus(200);
-      res.end();
-      break;
-    } else {
-      console.log("Unavailable");
-      res.sendStatus(202);
-      res.end();
-      break;
-    }
+  if (success !== null) {
+    console.log("Available");
+    res.sendStatus(200);
+    res.end();
+  } else {
+    console.log("Unavailable");
+    res.sendStatus(202);
+    res.end();
   }
+
   await browser.close();
   return;
 });
