@@ -173,6 +173,9 @@ app.get('/:file/:method/:uid', async function (req, res) {
 });
 
 app.get('/businessNameCheck/:name', async function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
   const puppeteer = require("puppeteer-extra");
   const StealthPlugin = require("puppeteer-extra-plugin-stealth");
   const randomUserAgent = require("random-useragent");
@@ -182,7 +185,7 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   let businessName = req.params.name;
 
   const browser = await puppeteer.launch({
-    headless: ture,
+    headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
@@ -203,9 +206,6 @@ app.get('/businessNameCheck/:name', async function (req, res) {
     if (errors) continue;
 
     const success = await page.$(".successMessage");
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
     if (success !== null) {
       console.log("Available");
