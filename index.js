@@ -128,7 +128,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
   var method = req.params.method;
   var uid = req.params.uid;
   var filePath;
-  var mailing = (method == "mail"? true : false);
+  var mailing = (method == "mail" ? true : false);
   if (file == "coo") {
     filePath = await coo(uid, mailing);
     console.log("coo function done");
@@ -181,6 +181,7 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   let tryAgain = 0;
 
   do {
+    console.log('opening browser bot ...');
     let browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox']
