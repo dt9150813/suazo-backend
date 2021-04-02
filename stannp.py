@@ -5,7 +5,7 @@ import json
 print("# start stannp")
 data = json.loads(sys.argv[1])
 filePath = sys.argv[2]
-maildata = {"file": "https://suazo-backend.herokuapp.com/coo/downlaod/n13JX6KUJVWTrb78OkCvIIXp71G2",
+maildata = {"file": "https://suazo-backend.herokuapp.com/file/ASD_FG_Inc_Certificate_of_Organization.pdf",
             "recipient[firstname]": data["ownerList"][data["primaryOwnerIndex"]]["firstName"],
             "recipient[lastname]": data["ownerList"][data["primaryOwnerIndex"]]["lastName"],
             "recipient[address1]": data["ownerList"][data["primaryOwnerIndex"]]["street"],
@@ -15,7 +15,7 @@ maildata = {"file": "https://suazo-backend.herokuapp.com/coo/downlaod/n13JX6KUJV
             "recipient[zipcode]": data["ownerList"][data["primaryOwnerIndex"]]["zipcode"],
             "recipient[country]": "USA",
             "transactional": "true",
-            # "template": "111666",
+            "template": "111666",
             "duplex": "False",
             }
 response = requests.post(

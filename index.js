@@ -138,6 +138,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
   if (file == "coo") {
     filePath = await coo(uid);
     console.log("coo function done");
+    console.log(filePath);
   } else if (file == "ss4") {
     filePath = await ss4(uid);
     console.log("ss4 function done");
@@ -181,7 +182,7 @@ app.get('/businessNameCheck/:name', async function (req, res) {
   let businessName = req.params.name;
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
