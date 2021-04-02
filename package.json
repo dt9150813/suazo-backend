@@ -19,7 +19,6 @@
   "homepage": "https://gitlab.com/dt9150813/suazo-backend#readme",
   "dependencies": {
     "@types/node": "^14.14.37",
-    "bluebird": "^3.7.2",
     "child_process": "^1.0.2",
     "express": "^4.17.1",
     "firebase": "^8.2.9",
