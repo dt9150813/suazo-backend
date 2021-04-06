@@ -121,7 +121,7 @@ app.get('/ss4/:uid', function (req, res) {
   res.send();
 });
 
-// app.use('/file', express.static('../tmp/'));
+app.use('/file', express.static('../tmp/'));
 
 app.get('/:file/:method/:uid', async function (req, res) {
   var file = req.params.file;
