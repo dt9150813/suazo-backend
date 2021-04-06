@@ -5,8 +5,8 @@ import json
 print("# start stannp")
 data = json.loads(sys.argv[1])
 filePath = sys.argv[2]
+print(filePath.replace("../tmp/", "https://suazo-backend.herokuapp.com/file/"))
 maildata = {
-            # "file": filePath,
             "file": filePath.replace("../tmp/", "https://suazo-backend.herokuapp.com/file/"),
             "recipient[firstname]": data["ownerList"][data["primaryOwnerIndex"]]["firstName"],
             "recipient[lastname]": data["ownerList"][data["primaryOwnerIndex"]]["lastName"],
