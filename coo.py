@@ -15,9 +15,8 @@ import json
 print('# Python script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
-mailing = sys.argv[2]
-print(mailing)
-print('# gettin packet')
+mailing = True if sys.argv[2] == "true" else False
+print('# getting packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
@@ -80,6 +79,7 @@ packet.seek(0)
 new_pdf = PdfFileReader(packet)
 print('# read your existing PDF')
 if mailing:
+    print("# mailing is True")
     existing_pdf = PdfFileReader(open("coo_mail_test.pdf", "rb"))
     output = PdfFileWriter()
     print('# add the "watermark" (which is the new pdf) on the existing page')
@@ -99,6 +99,7 @@ if mailing:
     # page = existing_pdf.getPage(2)
     # output.addPage(page)
 else:
+    print("# mailing is False")
     existing_pdf = PdfFileReader(open("coo.pdf", "rb"))
     output = PdfFileWriter()
     print('# add the "watermark" (which is the new pdf) on the existing page')

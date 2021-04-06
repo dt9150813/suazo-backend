@@ -13,10 +13,9 @@ import json
 print('# ss4 script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
-mailing = sys.argv[2]
-print(mailing)
+mailing = True if sys.argv[2] == "true" else False
 print
-print('# gettin packet')
+print('# getting packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
@@ -24,10 +23,10 @@ can.setFont('public-sans', 11)
 print('# start editing pdf')
 can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
                " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 1
-can.drawString(55, 665, data['businessName'])  # 2
+can.drawString(55, 665, data['businessName'])   # 2
 can.drawString(300, 665, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
                " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 3
-can.drawString(55, 640, data['businessStreet'])  # 4a
+can.drawString(55, 640, data['businessStreet']) # 4a
 can.drawString(55, 615, data['businessCity'] + ", " +
                data['businessState'] + " " + data['businessZipcode'])  # 4b
 can.drawString(300, 640, data['ownerList']
@@ -38,7 +37,7 @@ can.drawString(55, 590, data['ownerList']
                [data['primaryOwnerIndex']]['state'] + ", " + 'USA')  # 6
 can.drawString(55, 567, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
                " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 7a
-# can.drawString(340, 567, '121121121')  #7b
+# can.drawString(340, 567, '121121121')  #7b mark-SSN
 can.drawString(256, 543, "x")   # 8a Yes
 can.drawString(494, 543, str(len(data['ownerList'])))  # 8b
 can.drawString(494, 530, "x")   # 8c Yes
@@ -52,7 +51,7 @@ can.drawString(62, 373, data['businessType'])   # 10 Started new business specif
 can.drawString(160, 313.5, '1/' +
                data['businessStartMonth'] + '/'+str(data['businessStartYear']))    # 11
 can.drawString(492, 325, data['accountingStartMonth'])   # 12 Month
-can.drawString(98, 254, "0")   # 13 Agricultural
+can.drawString(98, 254, "0")    # 13 Agricultural
 can.drawString(185, 254, "0")   # 13 Household
 can.drawString(278, 254, "0")   # 13 Other
 can.drawString(419, 255, "x")   # 14 Check
@@ -91,10 +90,10 @@ elif data["businessType"] == 'manufacturing':
 elif data["businessType"] == 'finance':
     can.drawString(206, 195, "x")   # 16 Finance & insurance
     can.drawString(60, 170, "Finance & insurance")  # 17
-else:
+elif data["businessType"] == 'other':
     can.drawString(321, 195, "x")   # 16 Other
-    can.drawString(60, 170, "Other")  # 17
-    # can.drawString(404, 195, "Specification")   # 16 Other specification
+    can.drawString(404, 195, data['businessTypeOther'])   # 16 Other specification
+    can.drawString(60, 170, data['businessTypeOther'])  # 17
 can.drawString(400, 159, "x")   # 18 No
 # can.drawString(435, 62, "80142224000")  # Applicant's telephone number
 print('# finish editing pdf')
