@@ -14,29 +14,29 @@ print('# ss4 script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
 mailing = True if sys.argv[2] == "true" else False
-print
+primaryOwnerIndex = data['primaryOwnerIndex'] if len(data['ownerList']) > 1 else 0
 print('# getting packet')
 packet = io.BytesIO()
 print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 can.setFont('public-sans', 11)
 print('# start editing pdf')
-can.drawString(55, 687, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
-               " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 1
+can.drawString(55, 687, data['ownerList'][primaryOwnerIndex]['firstName'] +
+               " " + data['ownerList'][primaryOwnerIndex]['lastName'])  # 1
 can.drawString(55, 665, data['businessName'])   # 2
-can.drawString(300, 665, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
-               " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 3
+can.drawString(300, 665, data['ownerList'][primaryOwnerIndex]['firstName'] +
+               " " + data['ownerList'][primaryOwnerIndex]['lastName'])  # 3
 can.drawString(55, 640, data['businessStreet']) # 4a
 can.drawString(55, 615, data['businessCity'] + ", " +
                data['businessState'] + " " + data['businessZipcode'])  # 4b
 can.drawString(300, 640, data['ownerList']
-               [data['primaryOwnerIndex']]['street'])  # 5a
-can.drawString(300, 615, data['ownerList'][data['primaryOwnerIndex']]['city'] + ", " + data['ownerList']
-               [data['primaryOwnerIndex']]['state'] + " " + data['ownerList'][data['primaryOwnerIndex']]['zipcode'])  # 5b
+               [primaryOwnerIndex]['street'])  # 5a
+can.drawString(300, 615, data['ownerList'][primaryOwnerIndex]['city'] + ", " + data['ownerList']
+               [primaryOwnerIndex]['state'] + " " + data['ownerList'][primaryOwnerIndex]['zipcode'])  # 5b
 can.drawString(55, 590, data['ownerList']
-               [data['primaryOwnerIndex']]['state'] + ", " + 'USA')  # 6
-can.drawString(55, 567, data['ownerList'][data['primaryOwnerIndex']]['firstName'] +
-               " " + data['ownerList'][data['primaryOwnerIndex']]['lastName'])  # 7a
+               [primaryOwnerIndex]['state'] + ", " + 'USA')  # 6
+can.drawString(55, 567, data['ownerList'][primaryOwnerIndex]['firstName'] +
+               " " + data['ownerList'][primaryOwnerIndex]['lastName'])  # 7a
 # can.drawString(340, 567, '121121121')  #7b mark-SSN
 can.drawString(256, 543, "x")   # 8a Yes
 can.drawString(494, 543, str(len(data['ownerList'])))  # 8b
