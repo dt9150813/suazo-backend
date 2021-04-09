@@ -210,4 +210,5 @@ app.get('/:file/:method/:uid', async function (req, res) {
   //   else console.log("Removed ", filePath);
   // });
   // res.sendStatus(200).send("Success");
+  return;
 });
