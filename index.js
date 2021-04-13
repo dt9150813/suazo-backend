@@ -6,7 +6,7 @@ const express = require('express');
 const app = require('express')();
 const fs = require('fs');
 const nodemailer = require("nodemailer");
-const { Console } = require('node:console');
+// const { Console } = require('node:console');
 const port = process.env.PORT || 3000;
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
@@ -24,6 +24,9 @@ const db = firebase.firestore();
 async function getUserData(uid) {
   var data = db.collection('users').doc(uid);
   var doc = await data.get();
+  if (!doc.exists) {
+    throw new Error("getUserData error: No such document!");
+  }
   return doc.data();
 }
 
@@ -31,44 +34,45 @@ async function downloadFile(res, filePath) {
   await res.download(filePath);
 }
 
-async function coo(uid, mailing, res) {
+async function coo(uid, mailing) {
   var userData = await getUserData(uid);
-  // console.log("userData from getUserData: ", userData);
   return new Promise((resolve, reject) => {
     const python = spawn('python', ['coo.py', JSON.stringify(userData), mailing]);
     python.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      console.log("coo script message:");
+      console.log(`${data}`);
     });
-    python.stderr.on('data', function (data) {
-      console.error(data.toString());
+    python.stderr.on('data', (data) => {
+      console.log("coo error message:");
+      console.log(`${data}`);
     });
     python.on('close', () => {
       if (fs.existsSync(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`)) {
         resolve(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_Certificate_of_Organization.pdf`);
       } else {
-        console.log("sending error code")
-        res.status(500).send("The script did not generate pdf correctly!")
+        reject(new Error("The coo script did not generate pdf correctly!"));
       }
     });
   });
 }
 
-async function ss4(uid, mailing, res) {
+async function ss4(uid, mailing) {
   var userData = await getUserData(uid);
   return new Promise((resolve, reject) => {
     const python = spawn('python', ['ss4.py', JSON.stringify(userData), mailing]);
     python.stdout.on('data', (data) => {
-      console.log(`stdout: ${data}`);
+      console.log("ss4 script message:");
+      console.log(`${data}`);
     });
-    python.stderr.on('data', function (data) {
-      console.error(data.toString());
+    python.stderr.on('data', (data) => {
+      console.log("ss4 error message:");
+      console.log(`${data}`);
     });
     python.on('close', () => {
       if (fs.existsSync(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_ss4.pdf`)) {
         resolve(`../tmp/${String(userData['businessName']).replace(/ /g, "_")}_ss4.pdf`);
       } else {
-        console.log("sending error code")
-        res.status(500).send("The script did not generate pdf correctly!")
+        reject(new Error("The ss4 script did not generate pdf correctly!"));
       }
     });
   });
@@ -112,7 +116,7 @@ async function email(uid, file, filePath) {
   console.log("Message sent: %s", info.messageId);
 }
 
-async function mail(uid, filePath, res) {
+async function mail(uid, filePath) {
   var userData = await getUserData(uid);
   var result;
   return new Promise((resolve, reject) => {
@@ -121,18 +125,19 @@ async function mail(uid, filePath, res) {
       result = String(data).trim();
       console.log(result);
     });
-    python.stderr.on('data', function (data) {
-      console.error(data.toString());
+    python.stderr.on('data', (data) => {
+      console.log("stannp error: ");
+      console.log(`${data}`);
     });
     python.on('close', () => {
       if (result == "True") {
         resolve(console.log("Mail sent"));
       }
       else if (result == "False") {
-        resolve(console.log("Mail didn't send"));
+        reject(new Error("Mail didn't send"));
       }
       else {
-        reject(console.log("Something went wrong in the mailing script"));
+        reject(new Error("Something went wrong in the mailing script"));
       }
     });
   });
@@ -154,20 +159,13 @@ app.get('/:file/:method/:uid', async function (req, res) {
   var uid = req.params.uid;
   var filePath;
   var mailing = (method == "mail" ? true : false);
-  console.log(`Got mailing from URL: ${mailing}`);
-  let response = "Success";
-	let no_error = true;
   try {
     if (file == "coo") {
-      filePath = await coo(uid, mailing, res);
-      console.log("coo function done");
-      // console.log(filePath);
+      filePath = await coo(uid, mailing);
     } else if (file == "ss4") {
-      filePath = await ss4(uid, mailing, res);
-      console.log("ss4 function done");
+      filePath = await ss4(uid, mailing);
     } else {
-      console.log("File type doesn't exist!");
-      no_error = false;
+      throw new Error("File type doesn't exist!");
     }
     if (method == "download") {
       await downloadFile(res, filePath);
@@ -184,21 +182,17 @@ app.get('/:file/:method/:uid', async function (req, res) {
       res.send(data);
       return;
     } else {
-      console.log("This method doesn't exist!");
-      no_error = false;
+      throw new Error("This method doesn't exist!");
     }
     // fs.unlink(filePath, (err) => {
     //   if (err) console.log(err);
     //   else console.log("Removed ", filePath);
     // });
-  } catch (error){
-    no_error = false;
+    console.log("Sending 200 response");
+    res.sendStatus(200);
+  } catch (error) {
+    console.log(error.message);
+    console.log("Sending 500 error response");
+    res.sendStatus(500);
   }
-  if (no_error) {
-    console.log("Sending 200 response")
-		res.sendStatus(200).send(response);
-	} else {
-    console.log("Sending 500 error response")
-		res.sendStatus(500).send("Something went wrong")
-	}
 });

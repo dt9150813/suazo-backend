@@ -11,18 +11,14 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 import json
-
-print('# Python script started')
+print('# coo script started')
 pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
 mailing = True if sys.argv[2] == "true" else False
 primaryOwnerIndex = data['primaryOwnerIndex'] if len(data['ownerList']) > 1 else 0
-print('# getting packet')
 packet = io.BytesIO()
-print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 can.setFont('public-sans', 11)
-print('# start editing pdf')
 can.drawString(195, 630, data['businessName'])  # Print business name
 can.drawString(195, 600, data['businessStreet'])    # Print business streeet
 can.drawString(381, 600, data['businessCity'])  # Print business city
@@ -72,15 +68,12 @@ if data['ownerRace'] not in ["white", "preferNotToSay"]:
 else:
     can.drawString(256.5, 126.5, "X")  # Minority no
 # can.drawString(404, 130, "Specification") # Minority specification
-print('# finish editing pdf')
 can.save()
-print('# canvas saved')
-print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
-print('# read your existing PDF')
 if mailing:
-    # this part of the code is for testing mailing function
+    # ********this part of the code is for testing mailing function********
+    # ********while not having enough stannp credit********
     # stannp only gives enough free credit for sending 2-page pdfs
     # print("# mailing is True")
     # existing_pdf = PdfFileReader(open("coo_mail_test.pdf", "rb"))
@@ -91,9 +84,9 @@ if mailing:
     # page = existing_pdf.getPage(1)
     # page.mergePage(new_pdf.getPage(0))
     # output.addPage(page)
+    print("# mailing is True")
     existing_pdf = PdfFileReader(open("coo_mail.pdf", "rb"))
     output = PdfFileWriter()
-    print('# add the "watermark" (which is the new pdf) on the existing page')
     page = existing_pdf.getPage(0)
     output.addPage(page)
     page = existing_pdf.getPage(1)
@@ -105,15 +98,13 @@ else:
     print("# mailing is False")
     existing_pdf = PdfFileReader(open("coo.pdf", "rb"))
     output = PdfFileWriter()
-    print('# add the "watermark" (which is the new pdf) on the existing page')
     page = existing_pdf.getPage(0)
     page.mergePage(new_pdf.getPage(0))
     output.addPage(page)
     page = existing_pdf.getPage(1)
     output.addPage(page)
-print('# finally, write "output" to a real file')
 businessNameModified = str(data['businessName']).replace(" ", "_")  # Replace space in the business name with underscores to avoid file name error
 outputStream = open(f"../tmp/{businessNameModified}_Certificate_of_Organization.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
-print('# script done')
+print('# coo script done')

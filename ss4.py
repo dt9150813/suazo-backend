@@ -15,12 +15,9 @@ pdfmetrics.registerFont(TTFont('public-sans', 'public-sans.regular.ttf'))
 data = json.loads(sys.argv[1])
 mailing = True if sys.argv[2] == "true" else False
 primaryOwnerIndex = data['primaryOwnerIndex'] if len(data['ownerList']) > 1 else 0
-print('# getting packet')
 packet = io.BytesIO()
-print('# create a new PDF with Reportlab')
 can = canvas.Canvas(packet, pagesize=letter)
 can.setFont('public-sans', 11)
-print('# start editing pdf')
 can.drawString(55, 687, data['ownerList'][primaryOwnerIndex]['firstName'] +
                " " + data['ownerList'][primaryOwnerIndex]['lastName'])  # 1
 can.drawString(55, 665, data['businessName'])   # 2
@@ -96,17 +93,13 @@ elif data["businessType"] == 'other':
     can.drawString(60, 170, data['businessTypeOther'])  # 17
 can.drawString(400, 159, "x")   # 18 No
 # can.drawString(435, 62, "80142224000")  # Applicant's telephone number
-print('# finish editing pdf')
 can.save()
-print('# canvas saved')
-print('# move to the beginning of the StringIO buffer')
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
-print('# read your existing PDF')
 if mailing:
+    print("# mailing is True")
     existing_pdf = PdfFileReader(open("ss4_mail.pdf", "rb"))
     output = PdfFileWriter()
-    print('# add the "watermark" (which is the new pdf) on the existing page')
     page = existing_pdf.getPage(0)
     output.addPage(page)
     page = existing_pdf.getPage(1)
@@ -117,9 +110,9 @@ if mailing:
     page = existing_pdf.getPage(3)
     output.addPage(page)
 else:
+    print("# mailing is False")
     existing_pdf = PdfFileReader(open("ss4.pdf", "rb"))
     output = PdfFileWriter()
-    print('# add the "watermark" (which is the new pdf) on the existing page')
     page = existing_pdf.getPage(0)
     page.mergePage(new_pdf.getPage(0))
     output.addPage(page)
@@ -127,10 +120,9 @@ else:
     output.addPage(page)
     page = existing_pdf.getPage(2)
     output.addPage(page)
-print('# finally, write "output" to a real file')
 # Replace space in the business name with underscores to avoid file name error
 businessNameModified = str(data['businessName']).replace(" ", "_")
 outputStream = open(f"../tmp/{businessNameModified}_ss4.pdf", "wb")
 output.write(outputStream)
 outputStream.close()
-print('# script done')
+print('# ss4 script done')
