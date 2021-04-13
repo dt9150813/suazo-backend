@@ -6,6 +6,7 @@ const express = require('express');
 const app = require('express')();
 const fs = require('fs');
 const nodemailer = require("nodemailer");
+const { Console } = require('node:console');
 const port = process.env.PORT || 3000;
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
@@ -146,69 +147,58 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.use('/file', express.static('../tmp/'));
 
 app.get('/:file/:method/:uid', async function (req, res) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   var file = req.params.file;
   var method = req.params.method;
   var uid = req.params.uid;
   var filePath;
   var mailing = (method == "mail" ? true : false);
   console.log(`Got mailing from URL: ${mailing}`);
-  if (file == "coo") {
-    try {
+  let response = "Success";
+	let no_error = true;
+  try {
+    if (file == "coo") {
       filePath = await coo(uid, mailing, res);
       console.log("coo function done");
       // console.log(filePath);
-    } catch (error) {
-      res.status(404).send("Failed to generate COO file")
-    }
-  } else if (file == "ss4") {
-    try {
+    } else if (file == "ss4") {
       filePath = await ss4(uid, mailing, res);
       console.log("ss4 function done");
-    } catch (error) {
-      res.status(404).send("Failed to generate SS4 file")
+    } else {
+      console.log("File type doesn't exist!");
+      no_error = false;
     }
-  } else {
-    console.log("File type doesn't exist!");
-    res.sendStatus(404).send("File type doesn't exist!");
-    return;
-  }
-  if (method == "download") {
-    try {
+    if (method == "download") {
       await downloadFile(res, filePath);
       console.log("File downloaded");
       return;
-    } catch (error) {
-      res.sendStatus(404).send("Download function failed");
-    }
-  } else if (method == "email") {
-    try {
+    } else if (method == "email") {
       await email(uid, file, filePath);
       console.log("Email sent");
-    } catch (error) {
-      res.sendStatus(404).send("Email function failed");
-    }
-  } else if (method == "mail") {
-    try {
-      await mail(uid, filePath, res)
-    } catch (error) {
-      res.sendStatus(404).send("Mail function failed");
-    }
-  } else if (method == "view") {
-    try {
+    } else if (method == "mail") {
+      await mail(uid, filePath, res);
+    } else if (method == "view") {
       var data = fs.readFileSync(filePath);
       res.contentType("application/pdf");
       res.send(data);
       return;
-    } catch (error) {
-      res.sendStatus(404).send("View function failed");
+    } else {
+      console.log("This method doesn't exist!");
+      no_error = false;
     }
-  } else {
-    res.sendStatus(404).send("This method doesn't exist!");
+    // fs.unlink(filePath, (err) => {
+    //   if (err) console.log(err);
+    //   else console.log("Removed ", filePath);
+    // });
+  } catch (error){
+    no_error = false;
   }
-  // fs.unlink(filePath, (err) => {
-  //   if (err) console.log(err);
-  //   else console.log("Removed ", filePath);
-  // });
-  // res.sendStatus(200).send("Success");
-  return;
+  if (no_error) {
+    console.log("Sending 200 response")
+		res.sendStatus(200).send(response);
+	} else {
+    console.log("Sending 500 error response")
+		res.sendStatus(500).send("Something went wrong")
+	}
 });
