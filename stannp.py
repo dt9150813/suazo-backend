@@ -2,7 +2,6 @@ import sys
 import requests
 import json
 
-# print("# start stannp")
 data = json.loads(sys.argv[1])
 filePath = sys.argv[2]
 maildata = {
@@ -20,8 +19,7 @@ maildata = {
             "duplex": "False",
             }
 response = requests.post(
-    "https://us.stannp.com/api/v1/letters/create?api_key=55a74d67d7452effed4d8ff4", data=maildata)
+    "https://us.stannp.com/api/v1/letters/create?api_key=07891817ea44fbd359985fec", data=maildata)
 if "error" in response.json():
     print(response.json()['error'], file=sys.stderr)
 print(response.json()['success'])
-# print("# stannp done")

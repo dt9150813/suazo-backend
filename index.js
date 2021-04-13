@@ -19,7 +19,7 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-// Document ID for testing: n13JX6KUJVWTrb78OkCvIIXp71G2
+// Document ID for testing: TZVXX9485rQGFWm8Ge8RINrhOfX2
 
 async function getUserData(uid) {
   var data = db.collection('users').doc(uid);
@@ -128,6 +128,7 @@ async function mail(uid, filePath) {
     python.stderr.on('data', (data) => {
       console.log("stannp error: ");
       console.log(`${data}`);
+      // result += `${data}`;
     });
     python.on('close', () => {
       if (result == "True") {
