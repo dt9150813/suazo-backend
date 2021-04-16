@@ -1,8 +1,4 @@
 const firebase = require('firebase');
-// import "firebase/analytics";
-// import "firebase/auth";
-// import "firebase/firestore";
-
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
   authDomain: "suazoapp.firebaseapp.com",
@@ -13,9 +9,5 @@ var firebaseConfig = {
   measurementId: "G-L0MJNSNVKP"
 };
 // Initialize Firebase
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-// firebase.analytics();
-
 export const db = firebase.firestore();
-// export const auth = firebase.auth();
