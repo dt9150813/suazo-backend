@@ -144,17 +144,18 @@ async function mail(uid, filePath) {
   });
 }
 
-app.listen(port, function () {
-  console.log(`Listening on port ${port}`);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://suazoapp.web.app/");
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
 
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
-app.use('/file', express.static('../tmp/'));
+// app.use('/file', express.static('../tmp/'));
 
 app.get('/:file/:method/:uid', async function (req, res) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   var file = req.params.file;
   var method = req.params.method;
   var uid = req.params.uid;
@@ -196,4 +197,8 @@ app.get('/:file/:method/:uid', async function (req, res) {
     console.log("Sending 500 error response");
     res.sendStatus(500);
   }
+});
+
+app.listen(port, function () {
+  console.log(`Listening on port ${port}`);
 });
