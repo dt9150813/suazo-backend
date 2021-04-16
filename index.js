@@ -182,10 +182,12 @@ app.get('/:file/:method/:uid', async function (req, res) {
     } else {
       throw new Error("This method doesn't exist!");
     }
-    // fs.unlink(filePath, (err) => {
-    //   if (err) console.log(err);
-    //   else console.log("Removed ", filePath);
-    // });
+    fs.unlink(filePath, (err) => {
+      if (err){
+        throw new Error(err);
+      }
+      else console.log("Removed ", filePath);
+    });
     console.log("Sending 200 response");
     res.sendStatus(200);
   } catch (error) {
