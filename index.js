@@ -1,12 +1,9 @@
 const firebase = require('firebase');
-const {
-  spawn
-} = require('child_process');
+const { spawn } = require('child_process');
 const express = require('express');
 const app = require('express')();
 const fs = require('fs');
 const nodemailer = require("nodemailer");
-// const { Console } = require('node:console');
 const port = process.env.PORT || 3000;
 var firebaseConfig = {
   apiKey: "AIzaSyA7N-GCI5LbiytnE7mS8kT3a1WUhOMl0GM",
@@ -183,7 +180,7 @@ app.get('/:file/:method/:uid', async function (req, res) {
       throw new Error("This method doesn't exist!");
     }
     fs.unlink(filePath, (err) => {
-      if (err){
+      if (err) {
         throw new Error(err);
       }
       else console.log("Removed ", filePath);
@@ -197,6 +194,6 @@ app.get('/:file/:method/:uid', async function (req, res) {
   }
 });
 
-app.listen(port, function () {
+app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
