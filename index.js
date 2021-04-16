@@ -128,9 +128,10 @@ async function mail(uid, filePath) {
     python.stderr.on('data', (data) => {
       console.log("stannp error: ");
       console.log(`${data}`);
-      // result += `${data}`;
+      result += `${data}`;
     });
     python.on('close', () => {
+      console.log("result: ", result);
       if (result == "True") {
         resolve(console.log("Mail sent"));
       }
