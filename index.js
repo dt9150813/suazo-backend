@@ -18,6 +18,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 // Document ID for testing: TZVXX9485rQGFWm8Ge8RINrhOfX2
 
+//getUserData function takes uid received from the
+//frontend, tries to get firebase document with uid
+//and returns the document data 
 async function getUserData(uid) {
   var data = db.collection('users').doc(uid);
   var doc = await data.get();
@@ -27,10 +30,21 @@ async function getUserData(uid) {
   return doc.data();
 }
 
+//downloadFile function uses file path generated from
+//coo or ss4 function and res.download to let users
+//download pdf file
 async function downloadFile(res, filePath) {
   await res.download(filePath);
 }
 
+//coo function gets uid from front end calls,
+//retrieves firebase doc with getUserData function,
+//generates certificate of organization pdf,
+//and returns generated file path.
+//The mailing parameter received from calling URL
+//will be send to coo.py to decide whether the 
+//file needs an additional empty cover page for
+//printing the mailing address
 async function coo(uid, mailing) {
   var userData = await getUserData(uid);
   return new Promise((resolve, reject) => {
@@ -53,6 +67,8 @@ async function coo(uid, mailing) {
   });
 }
 
+//ss4 function does pretty much the same as coo
+//but generates federal ss4 file
 async function ss4(uid, mailing) {
   var userData = await getUserData(uid);
   return new Promise((resolve, reject) => {
