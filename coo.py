@@ -72,18 +72,6 @@ can.save()
 packet.seek(0)
 new_pdf = PdfFileReader(packet)
 if mailing:
-    # ********this part of the code is for testing mailing function********
-    # ********while not having enough stannp credit********
-    # stannp only gives enough free credit for sending 2-page pdfs
-    # print("# mailing is True")
-    # existing_pdf = PdfFileReader(open("coo_mail_test.pdf", "rb"))
-    # output = PdfFileWriter()
-    # print('# add the "watermark" (which is the new pdf) on the existing page')
-    # page = existing_pdf.getPage(0)
-    # output.addPage(page)
-    # page = existing_pdf.getPage(1)
-    # page.mergePage(new_pdf.getPage(0))
-    # output.addPage(page)
     print("# mailing is True")
     existing_pdf = PdfFileReader(open("coo_mail.pdf", "rb"))
     output = PdfFileWriter()
